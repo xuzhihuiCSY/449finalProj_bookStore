@@ -39,5 +39,30 @@ def delete_book(id):
     response = requests.delete(f'http://localhost:8000/books/{id}')  
     return redirect(url_for('index'))
 
+@app.route('/search', methods=['GET', 'POST'])
+def search_books():
+    if request.method == 'POST':
+        title = request.form.get('title', None)
+        author = request.form.get('author', None)
+        min_price = request.form.get('min_price', None)
+        max_price = request.form.get('max_price', None)
+        
+        query_params = {}
+        if title:
+            query_params['title'] = title
+        if author:
+            query_params['author'] = author
+        if min_price:
+            query_params['min_price'] = min_price
+        if max_price:
+            query_params['max_price'] = max_price
+
+        response = requests.get('http://localhost:8000/search', params=query_params)
+        books = response.json()
+        return render_template('search_results.html', books=books)
+    else:
+        return render_template('search.html')
+
+
 if __name__ == "__main__":
     app.run(port=5000)

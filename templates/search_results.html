@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search Results</title>
+    </head>
+    <body>
+        <h1>Search Results</h1>
+        {% for book in books %}
+            <h3><a href="/book/{{ book.id }}">{{ book.title }}</a></h3>
+            <p>{{ book.description }}</p>
+        {% else %}
+            <p>No results found.</p>
+        {% endfor %}
+        <a href="/search">New search</a>
+        <a href="/">Back to all books</a>
+    </body>
+</html>
