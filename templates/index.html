@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Book Store</title>
+    </head>
+    <body>
+        <h1>Book Store</h1>
+
+        <h2>Add a new book</h2>
+        <form action="/add_book" method="post">
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title"><br>
+            <label for="author">Author:</label><br>
+            <input type="text" id="author" name="author"><br>
+            <label for="description">Description:</label><br>
+            <input type="text" id="description" name="description"><br>
+            <label for="price">Price:</label><br>
+            <input type="text" id="price" name="price"><br>
+            <label for="stock">Stock:</label><br>
+            <input type="text" id="stock" name="stock"><br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <h2>All books</h2>
+        {% for book in books %}
+            <h3><a href="/book/{{ book.id }}">{{ book.title }}</a></h3>
+            <p>{{ book.description }}</p>
+        {% endfor %}
+    </body>
+</html>
