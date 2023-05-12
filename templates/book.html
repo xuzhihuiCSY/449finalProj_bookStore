@@ -11,6 +11,15 @@
         <p>Stock: {{ book.stock }}</p>
         <a href="/update_book/{{ book.id }}">Update</a>
         <a href="/delete_book/{{ book.id }}">Delete</a><br>
+
+        <!-- Sell books form -->
+        <h2>Sell books</h2>
+        <form action="/sell_book/{{ book.id }}" method="post">
+            <label for="quantity">Quantity:</label><br>
+            <input type="number" id="quantity" name="quantity" min="1" value="1"><br>
+            <input type="submit" value="purchase">
+        </form>
+
         <a href="/">Back to all books</a>
     </body>
 </html>

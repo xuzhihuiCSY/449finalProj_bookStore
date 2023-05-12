@@ -1,7 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Body
 from typing import List,Optional
 from models import Book
 import database
+from pydantic import BaseModel
+
+class SellBook(BaseModel):
+    quantity: int
 
 app = FastAPI()
 
@@ -49,3 +53,22 @@ async def search_books(title: Optional[str] = None, author: Optional[str] = None
     books = await database.search_books(title, author, min_price, max_price)
     return books
 
+@app.put("/sell_book/{id}", response_description="Sell a book")
+async def sell_book(id: str, sell_book: SellBook):
+    print(f"Received request to sell {sell_book.quantity} of book {id}")
+    sell_result = await database.sell_book(id, sell_book.quantity)
+    if sell_result:
+        return {"msg": f"Sold {sell_book.quantity} copies of book {id}"}
+    else:
+        raise HTTPException(status_code=404, detail=f"Book {id} not found or not enough stock")
+
+@app.get("/books_count", response_description="Count all books")
+async def count_books():
+    return {"total_books": await database.count_books()}
+
+@app.get("/best_selling_book", response_description="Get the best selling book", response_model=Book)
+async def get_best_selling_book():
+    book = await database.best_selling_book()
+    if book is None:
+        raise HTTPException(status_code=404, detail="No books found")
+    return book

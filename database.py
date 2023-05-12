@@ -16,7 +16,9 @@ def book_helper(book) -> dict:
         "description": book["description"],
         "price": book["price"],
         "stock": book["stock"],
+        "sales": book.get("sales", 0),  # Default to 0 if no sales have been recorded yet
     }
+
 
 # Retrieve all books present in the database
 async def retrieve_books():
@@ -77,3 +79,28 @@ async def search_books(title: Optional[str] = None, author: Optional[str] = None
     async for book in collection.find(query):
         books.append(book_helper(book))
     return books
+
+# Sell a book and decrease the stock
+async def sell_book(id: str, quantity: int):
+    book = await collection.find_one({"_id": ObjectId(id)})
+    if book:
+        if book['stock'] >= quantity:
+            new_stock = book['stock'] - quantity
+            await collection.update_one({"_id": ObjectId(id)}, {"$set": {"stock": new_stock}})
+            return True
+        else:
+            print(f"Insufficient stock for book {id}. Available: {book['stock']}, Requested: {quantity}")
+            return False
+    else:
+        print(f"Book {id} not found in the database.")
+        return False
+
+# Count all books present in the database
+async def count_books():
+    return await collection.count_documents({})
+
+# Find the best selling book
+async def best_selling_book():
+    book = await collection.find_one(sort=[("sales", -1)])
+    if book:
+        return book_helper(book)

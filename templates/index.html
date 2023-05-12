@@ -6,6 +6,17 @@
     <body>
         <h1>Book Store</h1>
         <h3><a href="/search">search for books</a></h3>
+        <h2>there are {{ count }} books selling in our store.</h2>
+
+        {% if best_selling %}
+            <h2>Best Selling Book</h2>
+            <p>Title: {{ best_selling.title }}</p>
+            <p>Author: {{ best_selling.author }}</p>
+        {% else %}
+            <p>No best selling book found.</p>
+        {% endif %}
+
+    
         <h2>Add a new book</h2>
         <form action="/add_book" method="post">
             <label for="title">Title:</label><br>
